@@ -1,5 +1,5 @@
 import express from "express";
-import { start } from "./server";
+import { start } from "@notifications/server";
 
 const app = express();
 
