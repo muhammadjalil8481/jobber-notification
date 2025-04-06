@@ -1,27 +1,26 @@
 // import "express-async-errors";
-import { LogLevel, winstonLogger } from "@muhammadjalil8481/jobber-shared";
+import { LogLevel } from "@muhammadjalil8481/jobber-shared";
 import { Application } from "express";
-import { Logger } from "winston";
 import http from "http";
 import { healthRoutes } from "./routes";
+import { log } from "./logger";
+import { config } from "./config";
+// import { checkElasticSearchConnection } from "./elasticsearch";
+const SERVER_PORT = config.PORT;
 
-const SERVER_PORT = 4001;
-
-const log: Logger = winstonLogger({
-  name: "notification-service",
-  level: LogLevel.DEBUG,
-});
 
 export function start(app: Application): void {
   startServer(app);
-  app.use("",healthRoutes)
+  app.use("", healthRoutes);
   startQueues();
   startElasticSearch();
 }
 
 async function startQueues(): Promise<void> {}
 
-function startElasticSearch(): void {}
+function startElasticSearch(): void {
+  // checkElasticSearchConnection();
+}
 
 function startServer(app: Application): void {
   try {
