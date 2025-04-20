@@ -13,13 +13,12 @@ export async function checkElasticSearchConnection(): Promise<void> {
     try {
       const health: ClusterHealthResponse = await esClient.cluster.health();
       log.info(
-        "Notification service checkConnection() method: Elasticsearch health status - ",
-        health.status
+        `Notification service checkConnection() method: Elasticsearch health status - ${health.status}`
       );
       isConnected = true;
     } catch (error) {
       log.error(
-        "Notification service checkConnection() method: Connection to elasticsearch failed, Retrting...",
+        "Notification service checkConnection() method: Connection to elasticsearch failed, Restrting...",
         error
       );
     }

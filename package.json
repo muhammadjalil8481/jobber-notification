@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "clear": "cross-env CLEAR_CMD=clear",
-    "dev": "npm run clean && tsx watch src/app.ts | pino-pretty -C",
+    "dev": "npm run clear && tsx watch src/app.ts | pino-pretty -C",
     "build": "npm run clean && tsc --project tsconfig.json &m& tsc-alias -p tsconfig.json"
   },
   "keywords": [],
