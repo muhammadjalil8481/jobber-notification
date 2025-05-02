@@ -17,7 +17,7 @@ export function start(app: Application): void {
 }
 
 async function startQueues(): Promise<void> {
-  await createConnection();
+ await createConnection();
 }
 
 function startElasticSearch(): void {
