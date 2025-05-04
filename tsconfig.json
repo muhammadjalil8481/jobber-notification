@@ -5,7 +5,7 @@
     // "allowImportingTsExtensions": true, // Allows importing .ts files with extensions
     // "declarationDir": "./dist/types", // Outputs type declaration files to dist/types folder
     "importHelpers": true, // Import helper functions from tslib to reduce code duplication
-    "lib": ["esnext","dom"], // Includes type definitions for the latest ECMAScript features
+    "lib": ["esnext", "dom"], // Includes type definitions for the latest ECMAScript features
     "target": "ES6", // Outputs the ts code to js ES6
     "module": "CommonJS", // Specifies the module code generation. The ESNext module is used so ts imports are not transpiled to require
     "moduleResolution": "node", // Uses Node.js module resolution strategy
@@ -36,5 +36,5 @@
     }
   },
   "include": ["src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts", "**/__tests__/**"]
 }

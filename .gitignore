@@ -138,9 +138,9 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-# End of https://www.toptal.com/developers/gitignore/api/node
-Dockerfile
-Dockerfile.dev
-.dockerignore
+# # End of https://www.toptal.com/developers/gitignore/api/node
+# Dockerfile
+# Dockerfile.dev
+# .dockerignore
 .npmrc
-Jenkinsfile
+# Jenkinsfile

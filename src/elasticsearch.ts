@@ -9,7 +9,11 @@ const esClient = new Client({
 
 export async function checkElasticSearchConnection(): Promise<void> {
   let isConnected = false;
-  while (!isConnected) {
+  let retries = 0;
+  log.info(
+    `Notification service checkConnection() method: Connecting to elasticsearch ${config.ELASTIC_SEARCH_URL}...`
+  );
+  while (!isConnected && retries < 3) {
     try {
       const health: ClusterHealthResponse = await esClient.cluster.health();
       log.info(
@@ -17,10 +21,14 @@ export async function checkElasticSearchConnection(): Promise<void> {
       );
       isConnected = true;
     } catch (error) {
-      log.error(
-        "Notification service checkConnection() method: Connection to elasticsearch failed, Restrting...",
-        error
-      );
+      retries++;
+      if (retries >= 3) {
+        log.error(
+          `Retrying ${retries} Notification service checkConnection() method: Connection to elasticsearch failed, Restrting...`,
+          error
+        );
+        process.exit(1);
+      }
     }
   }
 }

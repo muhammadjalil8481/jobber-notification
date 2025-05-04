@@ -28,7 +28,7 @@ function startServer(app: Application): void {
   try {
     const httpServer: http.Server = new http.Server(app);
     log.info(
-      `Worked with process id of ${process.pid} on notification server has started`
+      `Worker with process id of ${process.pid} on notification server has started`
     );
     httpServer.listen(SERVER_PORT, () => {
       log.info(`Notification service running on port ${SERVER_PORT}`);
