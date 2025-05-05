@@ -144,3 +144,7 @@ dist
 # .dockerignore
 .npmrc
 # Jenkinsfile
+
+services
+docker-volumes
+secrets.md
