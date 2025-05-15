@@ -1,11 +1,15 @@
 import { Request, Router, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+// import { GatewayRequestVerification } from "./gateway-request-verification";
 
 const router: Router = Router();
 
-router.get("/notification-health", (_req: Request, res: Response) => {
-  res.status(StatusCodes.OK).send("Notification Service is up and running");
-});
+router.get(
+  "/health",
+  // GatewayRequestVerification,
+  (_: Request, res: Response) => {
+    res.status(StatusCodes.OK).json({ status: "ok" });
+  }
+);
 
-
-export {router as healthRoutes}
+export { router as healthRoutes };

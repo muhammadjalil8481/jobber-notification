@@ -1,4 +1,4 @@
-// import "express-async-errors";
+import "express-async-errors";
 import { LogLevel } from "@muhammadjalil8481/jobber-shared";
 import { Application } from "express";
 import http from "http";
