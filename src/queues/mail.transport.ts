@@ -42,7 +42,7 @@ async function sendEmail(
   });
 
   await email.send({
-    template: path.join(__dirname, "..", "src/emails", template),
+    template: path.join(__dirname, "..", "emails", template),
     message: {
       to: receiver,
     },

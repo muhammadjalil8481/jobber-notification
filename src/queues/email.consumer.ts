@@ -31,12 +31,20 @@ async function consumeMessage(data: ConsumerParams): Promise<void> {
       async (message: ConsumeMessage | null) => {
         try {
           await handler(message!);
+          channel.ack(message!);
+          log.info(
+            `Notification service consumeMessage() consumer method: ${name} - Message processed and acknowledged`
+          );
         } catch (error) {
           log.error(
             `Notification service consumeMessage() consumer method: ${name}`,
             error
           );
+          channel.nack(message!, false, true);
         }
+      },
+      {
+        noAck: false,
       }
     );
   } catch (error) {
@@ -48,9 +56,9 @@ async function consumeAuthEmailMessages(channel: Channel): Promise<void> {
   await consumeMessage({
     channel,
     name: "auth_email",
-    exchangeName: "auth_email_exchange",
-    queueName: "auth_email_queue",
-    bindingKey: "auth_email_key",
+    exchangeName: "auth_ex_verification_email",
+    queueName: "auth_queue_verification_email",
+    bindingKey: "auth_key_verification_email",
     handler: async (message: ConsumeMessage) => {
       const data = JSON.parse(message!.content.toString());
       log.info("Notification service Received auth email message:", data);
@@ -65,10 +73,6 @@ async function consumeAuthEmailMessages(channel: Channel): Promise<void> {
         resetLink: data.resetLink,
       };
       await sendEmail(data.template, data.receiverEmail, locals);
-
-      // acknowledge the message after processing
-      log.info("Notification service auth email Acknowledging message:", data);
-      channel.ack(message!);
     },
   });
 }
@@ -79,7 +83,7 @@ async function consumeOrderEmailMessages(channel: Channel): Promise<void> {
     name: "order_email",
     exchangeName: "order_email_exchange",
     queueName: "order_email_queue",
-    bindingKey: "order_email_key",
+    bindingKey: "order_email_key",   
     handler: async (message: ConsumeMessage) => {
       const data = JSON.parse(message!.content.toString());
       log.info("Notification service Received order email message:", data);
@@ -121,7 +125,6 @@ async function consumeOrderEmailMessages(channel: Channel): Promise<void> {
       }
       // acknowledge the message after processing
       log.info("Notification service Acknowledging message:", data);
-      channel.ack(message!);
     },
   });
 }
