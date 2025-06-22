@@ -1,10 +1,11 @@
-import * as connection from "@notifications/queues/connection";
+import * as connection from "../connection";
 import { Channel } from "amqplib";
 import { consumeAuthEmailMessages, consumeOrderEmailMessages } from "../email.consumer";
 
 jest.mock("@notifications/queues/connection");
 jest.mock("amqplib");
 jest.mock("@muhammadjalil8481/jobber-shared");
+// jest.mock("@notifications/logger")
 
 jest.mock("@muhammadjalil8481/jobber-shared", () => ({
   winstonLogger: () => ({
@@ -16,6 +17,14 @@ jest.mock("@muhammadjalil8481/jobber-shared", () => ({
   LogLevel: {
     DEBUG: "debug",
   },
+  createConfig: jest.fn(() => ({
+    get: jest.fn((key: string) => {
+      const configMap: Record<string, string> = {
+        ELASTIC_SEARCH_URL: "http://localhost:9200", // example mock value
+      };
+      return configMap[key];
+    }),
+  })),
 }));
 
 describe("Email Consumer", () => {
@@ -47,14 +56,14 @@ describe("Email Consumer", () => {
       const connectionChannel = await connection.createConnection();
       await consumeAuthEmailMessages(connectionChannel as Channel);
       expect(connectionChannel?.assertExchange).toHaveBeenCalledWith(
-        "auth_email_exchange",
+        "auth_ex_verification_email",
         "direct"
       );
       expect(connectionChannel?.assertQueue).toHaveBeenCalledTimes(1);
       expect(connectionChannel?.bindQueue).toHaveBeenCalledWith(
         "auth_email_queue",
-        "auth_email_exchange",
-        "auth_email_key"
+        "auth_ex_verification_email",
+        "auth_key_verification_email"
       );
     });
   });
