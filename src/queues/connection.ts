@@ -8,25 +8,30 @@ import {
 
 async function createConnection(): Promise<Channel | undefined> {
   let retries = 0;
-  log.info(`Notification service createConnection() method: Connecting to RabbitMQ ${config.RABBITMQ_ENDPOINT}...`);
-  try {
-    const connection: ChannelModel = await client.connect(
-      `${config.RABBITMQ_ENDPOINT}`
-    );
-    const channel: Channel = await connection.createChannel();
-    log.info("Notification service connected to RabbitMQ successfully");
+  const maxRetries = 3;
 
-    // Consumer
-    await consumeAuthEmailMessages(channel);
-    await consumeOrderEmailMessages(channel);
+  log.info(
+    `Notification service createConnection() method: Connecting to RabbitMQ ${config.RABBITMQ_ENDPOINT}...`
+  );
+  while (retries < maxRetries) {
+    try {
+      const url = config.RABBITMQ_ENDPOINT;
+      const connection: ChannelModel = await client.connect(`${url}`);
+      const channel: Channel = await connection.createChannel();
+      log.info("Notification service connected to RabbitMQ successfully");
 
-    closeConnection(channel, connection);
-    return channel;
-  } catch (error) {
-    retries++;
-    if (retries >= 3) {
-      log.error("Notification service createConnection() method", error);
-      process.exit(1);
+      // Consumer
+      await consumeAuthEmailMessages(channel);
+      await consumeOrderEmailMessages(channel);
+
+      closeConnection(channel, connection);
+      return channel;
+    } catch (error) {
+      retries++;
+      if (retries >= 3) {
+        log.error("Notification service createConnection() method", error);
+        process.exit(1);
+      }
     }
   }
 }
